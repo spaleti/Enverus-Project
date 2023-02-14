@@ -37,6 +37,13 @@ string currentDirectory = Directory.GetCurrentDirectory();
 string excelFilePath = Path.Combine(currentDirectory, "Worldwide Rig Count Jan 2023.xlsx");
 string csvFilePath = Path.Combine(currentDirectory, "Worldwide Rig Count Jan 2023.csv");
 
+// stop program if file does not exist
+if (!File.Exists(excelFilePath))
+{
+    Console.WriteLine("Need to put file there manually");
+    return;
+}
+
 using (Converter converter = new Converter(excelFilePath))
 {
     SpreadsheetConvertOptions options = new SpreadsheetConvertOptions
