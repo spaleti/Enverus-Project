@@ -11,12 +11,12 @@ using GroupDocs.Conversion;
 using GroupDocs.Conversion.FileTypes;
 using GroupDocs.Conversion.Options.Convert;
 
-//OVO JE NAJBLIZE DO SADA - skine fajl ali nece da ga otvori kaze 0bytes
+//downloads file but it wont open it - 0bytes
 /*try
 {
     using (var client = new WebClient())
     {
-        //DownloadFile vrti u nedogled
+        //.DownloadFile vrti u nedogled
         client.DownloadFileAsync(new Uri("https://bakerhughesrigcount.gcs-web.com/intl-rig-count?c=79687&p=irol-rigcountsintl"), "Worldwide Rig Count Jan 2023.xlsx");
     }
     Console.WriteLine("Download complete.");
@@ -31,7 +31,7 @@ catch (TaskCanceledException ex)
 }*/
 
 
-//OSTATAK RADI AKO POSTOJI XLSX dokument
+//the rest works if there is xlsx file
 
 string currentDirectory = Directory.GetCurrentDirectory();
 string excelFilePath = Path.Combine(currentDirectory, "Worldwide Rig Count Jan 2023.xlsx");
@@ -48,25 +48,25 @@ using (Converter converter = new Converter(excelFilePath))
     converter.Convert(csvFilePath, options);
 }
 
-List<string> linesToWrite = new List<string>(); // lista za 2022 i 2021
+List<string> linesToWrite = new List<string>(); // list for 2022 i 2021 year
 
 using (var streamReader = new StreamReader(csvFilePath))
 {
-    //preskociti pocetak i 2023 god
+    //skip header + new lines + 2023 year
     for (int i = 0; i < 21; i++)
     {
         streamReader.ReadLine();
     }
-    //upisati u listu 2022 i 2021
+    //write in list 2022 and 2021 years
     for (int i = 0; i < 30; i++)
     {
         linesToWrite.Add(streamReader.ReadLine());
     }
 }
-//brisem sadrzaj celog csv fajla
+//delete all content of csv file
 System.IO.File.WriteAllText(csvFilePath, string.Empty);
 
-//upisujem 2022 2021 
+//write in content in csv for 2022 and 2021 year
 using (StreamWriter writer = new StreamWriter(csvFilePath))
 {
     foreach (string line in linesToWrite)
